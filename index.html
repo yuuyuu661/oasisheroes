@@ -260,7 +260,7 @@
             <div class="grid">${equippedHtml(data)}</div>
           </section>
           <section>
-            <h2>インベントリー</h2>
+            <h2>インベントリー ${data.inventory_count ?? data.inventory.length}/${data.inventory_limit ?? 40}</h2>
             <div class="grid">${inventoryHtml(data)}</div>
           </section>
         </div>
