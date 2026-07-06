@@ -24,16 +24,15 @@
     header {
       padding: 18px 18px 12px;
       border-bottom: 1px solid var(--line);
-      background: #ffffff;
+      background: #fff;
       position: sticky;
       top: 0;
       z-index: 2;
     }
-    h1 {
-      font-size: 24px;
-      margin: 0 0 6px;
-    }
-    .sub { color: var(--muted); font-size: 13px; }
+    h1 { font-size: 24px; margin: 0 0 6px; }
+    h2 { margin: 0 0 10px; font-size: 17px; }
+    .sub, .meta, .log { color: var(--muted); }
+    .sub, .meta { font-size: 13px; }
     main {
       width: min(1120px, 100%);
       margin: 0 auto;
@@ -42,44 +41,38 @@
       grid-template-columns: 1.1fr .9fr;
       gap: 14px;
     }
+    main.creation { display: block; }
     section {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 14px;
     }
-    h2 { margin: 0 0 10px; font-size: 17px; }
+    .grid { display: grid; gap: 8px; }
     .hero {
       min-height: 220px;
       display: grid;
-      grid-template-columns: 150px 1fr;
+      grid-template-columns: 180px 1fr;
       gap: 16px;
       align-items: center;
     }
-    .avatar {
-      width: 148px;
-      height: 148px;
-      border-radius: 8px;
-      background:
-        radial-gradient(circle at 50% 28%, #ffe6a3 0 18%, transparent 19%),
-        linear-gradient(145deg, #2d8c57, #8fd3a8);
+    .art-wrap {
+      height: 154px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
       border: 1px solid #c9d9c8;
-      position: relative;
+      border-radius: 8px;
+      background: linear-gradient(#f4fbf0, #dfeedd);
     }
-    .avatar:after {
-      content: "";
-      position: absolute;
-      left: 42px;
-      top: 62px;
-      width: 64px;
-      height: 62px;
-      border-radius: 8px 8px 18px 18px;
-      background: #f1f7e7;
-      box-shadow: inset 0 -8px 0 rgba(0,0,0,.08);
+    .class-art {
+      width: 160px;
+      height: 160px;
+      display: block;
     }
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
       margin-top: 12px;
     }
@@ -91,7 +84,6 @@
     }
     .label { color: var(--muted); font-size: 12px; }
     .value { font-weight: 700; font-size: 20px; margin-top: 3px; }
-    .grid { display: grid; gap: 8px; }
     .item, .listing {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -103,7 +95,6 @@
       background: #fff;
     }
     .item strong, .listing strong { display: block; }
-    .meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
     .legendary { border-color: #e3a32d; background: #fff9e8; }
     .epic { border-color: #8e6ad8; background: #f7f2ff; }
     .rare { border-color: #3d8fd9; background: #eff7ff; }
@@ -125,23 +116,34 @@
       font: inherit;
     }
     .actions { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
-    .log {
-      min-height: 44px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+    .log { min-height: 44px; font-size: 13px; line-height: 1.5; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 10px; }
     .tab.active { background: var(--accent-2); color: #20150a; }
-    @media (max-width: 760px) {
+    .class-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .class-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      display: grid;
+      gap: 10px;
+    }
+    .class-card .art-wrap { height: 116px; }
+    .class-card .class-art { width: 132px; height: 132px; }
+    .class-card h3 { margin: 0; font-size: 16px; }
+    @media (max-width: 860px) {
       main { grid-template-columns: 1fr; padding: 10px; }
+      .class-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
       .hero { grid-template-columns: 1fr; }
-      .avatar { margin: 0 auto; }
       .stats { grid-template-columns: 1fr 1fr; }
+      .class-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -150,35 +152,10 @@
     <h1>おあしすヒーローズ</h1>
     <div class="sub">放置で冒険、装備を集めて、交易所で売り買いできます。</div>
   </header>
-  <main>
-    <div class="grid">
-      <section class="hero">
-        <div class="avatar" aria-label="ヒーロー"></div>
-        <div>
-          <h2 id="name">読み込み中...</h2>
-          <div class="log" id="log"></div>
-          <div class="stats">
-            <div class="stat"><div class="label">レベル</div><div class="value" id="level">-</div></div>
-            <div class="stat"><div class="label">総合力</div><div class="value" id="power">-</div></div>
-            <div class="stat"><div class="label">ゴールド</div><div class="value" id="gold">-</div></div>
-          </div>
-        </div>
-      </section>
-      <section>
-        <h2>装備中</h2>
-        <div class="grid" id="equipped"></div>
-      </section>
-      <section>
-        <h2>インベントリー</h2>
-        <div class="grid" id="inventory"></div>
-      </section>
-    </div>
+  <main id="app">
     <section>
-      <div class="tabs">
-        <button class="tab active" type="button">交易所</button>
-        <button class="secondary" type="button" onclick="load()">更新</button>
-      </div>
-      <div class="grid" id="listings"></div>
+      <h2>読み込み中...</h2>
+      <div class="log" id="log"></div>
     </section>
   </main>
   <script>
@@ -186,15 +163,6 @@
     const session = params.get("session");
     const API_BASE = (params.get("api") || location.origin).replace(/\/$/, "");
     const state = { data: null };
-
-    function itemClass(item) {
-      return `item ${item.rarity || ""}`;
-    }
-
-    function itemLine(item) {
-      const slot = state.data?.slot_labels?.[item.slot] || item.slot;
-      return `<strong>${item.rarity_label} ${item.name}</strong><div class="meta">${slot} / 強さ +${item.power}${item.equipped ? " / 装備中" : ""}</div>`;
-    }
 
     async function api(path, options = {}) {
       const res = await fetch(`${API_BASE}${path}`, {
@@ -206,44 +174,139 @@
       return data;
     }
 
+    function art(key, name) {
+      const safeKey = key || "swordsman";
+      const safeName = name || "ヒーロー";
+      return `<div class="art-wrap"><img class="class-art" src="assets/classes/${safeKey}.svg" alt="${safeName}"></div>`;
+    }
+
+    function itemClass(item) {
+      return `item ${item.rarity || ""}`;
+    }
+
+    function itemLine(item) {
+      const slot = state.data?.slot_labels?.[item.slot] || item.slot;
+      return `<strong>${item.rarity_label} ${item.name}</strong><div class="meta">${slot} / 強さ +${item.power}${item.equipped ? " / 装備中" : ""}</div>`;
+    }
+
     async function load() {
       try {
         state.data = await api(`/api/heroes/me?session=${encodeURIComponent(session)}`);
         render();
       } catch (error) {
-        document.getElementById("log").textContent = error.message;
+        document.getElementById("app").className = "creation";
+        document.getElementById("app").innerHTML = `<section><h2>接続できませんでした</h2><div class="log">${error.message}</div></section>`;
       }
     }
 
     function render() {
       const data = state.data;
-      document.getElementById("name").textContent = data.character.user_name || "おあしすヒーロー";
-      document.getElementById("level").textContent = data.character.level;
-      document.getElementById("power").textContent = data.power;
-      document.getElementById("gold").textContent = data.character.gold;
+      if (data.needs_creation) {
+        renderCreation(data);
+        return;
+      }
+      renderDashboard(data);
+    }
 
+    function renderCreation(data) {
+      document.getElementById("app").className = "creation";
+      document.getElementById("app").innerHTML = `
+        <section>
+          <h2>キャラクター作成</h2>
+          <div class="log">最初の職業を選んでください。あとから装備を集めてどんどん強くなります。</div>
+          <div class="class-grid">
+            ${data.classes.map(job => `
+              <div class="class-card">
+                ${art(job.key, job.name)}
+                <div>
+                  <h3>${job.name}</h3>
+                  <div class="meta">${job.summary}</div>
+                </div>
+                <button type="button" onclick="createCharacter('${job.key}')">この職業で始める</button>
+              </div>
+            `).join("")}
+          </div>
+        </section>`;
+    }
+
+    async function createCharacter(classKey) {
+      state.data = await api("/api/heroes/create-character", {
+        method: "POST",
+        body: JSON.stringify({ session, class_key: classKey })
+      });
+      render();
+    }
+
+    function renderDashboard(data) {
+      const classInfo = (data.classes || []).find(job => job.key === data.character.class_key) || { key: "swordsman", name: "ヒーロー" };
+      document.getElementById("app").className = "";
+      document.getElementById("app").innerHTML = `
+        <div class="grid">
+          <section class="hero">
+            ${art(classInfo.key, classInfo.name)}
+            <div>
+              <h2>${data.character.user_name || "おあしすヒーロー"}</h2>
+              <div class="log">${logText(data)}</div>
+              <div class="stats">
+                <div class="stat"><div class="label">職業</div><div class="value">${classInfo.name}</div></div>
+                <div class="stat"><div class="label">レベル</div><div class="value">${data.character.level}</div></div>
+                <div class="stat"><div class="label">総合力</div><div class="value">${data.power}</div></div>
+                <div class="stat"><div class="label">ゴールド</div><div class="value">${data.character.gold}</div></div>
+              </div>
+            </div>
+          </section>
+          <section>
+            <h2>装備中</h2>
+            <div class="grid">${equippedHtml(data)}</div>
+          </section>
+          <section>
+            <h2>インベントリー</h2>
+            <div class="grid">${inventoryHtml(data)}</div>
+          </section>
+        </div>
+        <section>
+          <div class="tabs">
+            <button class="tab active" type="button">交易所</button>
+            <button class="secondary" type="button" onclick="load()">更新</button>
+          </div>
+          <div class="grid">${listingsHtml(data)}</div>
+        </section>`;
+    }
+
+    function logText(data) {
       const drops = data.drops || [];
-      document.getElementById("log").textContent = drops.length
+      return drops.length
         ? `${drops.length}個の装備を拾いました。`
         : "冒険中です。しばらく放置すると経験値・ゴールド・装備が入ります。";
+    }
 
-      document.getElementById("equipped").innerHTML = data.equipped.length
+    function equippedHtml(data) {
+      return data.equipped.length
         ? data.equipped.map(item => `<div class="${itemClass(item)}"><div>${itemLine(item)}</div></div>`).join("")
         : `<div class="meta">まだ装備していません。</div>`;
+    }
 
-      document.getElementById("inventory").innerHTML = data.inventory.length
-        ? data.inventory.map(item => {
-            const priceId = `price-${item.id}`;
-            const buttons = item.equipped
-              ? ""
-              : `<div class="actions"><button onclick="equip(${item.id})">装備</button><input id="${priceId}" type="number" min="1" value="${Math.max(50, item.power * 10)}"><button class="secondary" onclick="listItem(${item.id}, '${priceId}')">出品</button></div>`;
-            return `<div class="${itemClass(item)}"><div>${itemLine(item)}</div>${buttons}</div>`;
-          }).join("")
-        : `<div class="meta">装備はまだありません。</div>`;
+    function inventoryHtml(data) {
+      if (!data.inventory.length) return `<div class="meta">装備はまだありません。</div>`;
+      return data.inventory.map(item => {
+        const priceId = `price-${item.id}`;
+        const buttons = item.equipped
+          ? ""
+          : `<div class="actions"><button onclick="equip(${item.id})">装備</button><input id="${priceId}" type="number" min="1" value="${Math.max(50, item.power * 10)}"><button class="secondary" onclick="listItem(${item.id}, '${priceId}')">出品</button></div>`;
+        return `<div class="${itemClass(item)}"><div>${itemLine(item)}</div>${buttons}</div>`;
+      }).join("");
+    }
 
-      document.getElementById("listings").innerHTML = data.listings.length
-        ? data.listings.map(item => `<div class="listing ${item.rarity}"><div><strong>${item.rarity_label} ${item.name}</strong><div class="meta">強さ +${item.power} / 出品者 ${item.seller_name || "不明"}</div></div><div class="actions"><strong>${item.price}G</strong><button onclick="buy(${item.listing_id})">購入</button></div></div>`).join("")
-        : `<div class="meta">出品はまだありません。</div>`;
+    function listingsHtml(data) {
+      if (!data.listings.length) return `<div class="meta">出品はまだありません。</div>`;
+      return data.listings.map(item => `
+        <div class="listing ${item.rarity}">
+          <div>
+            <strong>${item.rarity_label} ${item.name}</strong>
+            <div class="meta">強さ +${item.power} / 出品者 ${item.seller_name || "不明"}</div>
+          </div>
+          <div class="actions"><strong>${item.price}G</strong><button onclick="buy(${item.listing_id})">購入</button></div>
+        </div>`).join("");
     }
 
     async function equip(itemId) {
@@ -272,10 +335,13 @@
     }
 
     if (!session) {
-      document.getElementById("log").textContent = "Discordからリンクを発行してください。";
+      document.getElementById("app").className = "creation";
+      document.getElementById("app").innerHTML = `<section><h2>Discordから開いてください</h2><div class="log">Botのリンクからアクセスするとプレイできます。</div></section>`;
     } else {
       load();
-      setInterval(load, 60000);
+      setInterval(() => {
+        if (!state.data?.needs_creation) load();
+      }, 60000);
     }
   </script>
 </body>
