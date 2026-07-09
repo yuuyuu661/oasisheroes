@@ -29,6 +29,12 @@
       top: 0;
       z-index: 2;
     }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
     h1 { font-size: 24px; margin: 0 0 6px; }
     h2 { margin: 0 0 10px; font-size: 17px; }
     .sub, .meta, .log { color: var(--muted); }
@@ -95,6 +101,17 @@
       background: #fff;
     }
     .item strong, .listing strong { display: block; }
+    .item-icon {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7faf4;
+      padding: 4px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
     .legendary { border-color: #e3a32d; background: #fff9e8; }
     .epic { border-color: #8e6ad8; background: #f7f2ff; }
     .rare { border-color: #3d8fd9; background: #eff7ff; }
@@ -149,8 +166,13 @@
 </head>
 <body>
   <header>
-    <h1>おあしすヒーローズ</h1>
-    <div class="sub">放置で冒険、装備を集めて、交易所で売り買いできます。</div>
+    <div class="header-row">
+      <div>
+        <h1>おあしすヒーローズ</h1>
+        <div class="sub">放置で冒険、装備を集めて、交易所で売り買いできます。</div>
+      </div>
+      <button class="secondary" type="button" onclick="openAdminMenu()">管理メニュー</button>
+    </div>
   </header>
   <main id="app">
     <section>
@@ -163,6 +185,14 @@
     const session = params.get("session");
     const API_BASE = (params.get("api") || location.origin).replace(/\/$/, "");
     const state = { data: null };
+
+    function openAdminMenu() {
+      const token = prompt("HEROES_ADMIN_TOKENを入力してください。");
+      if (!token) return;
+      localStorage.setItem("heroes_admin_token", token);
+      localStorage.setItem("heroes_admin_api", API_BASE);
+      location.href = `admin.html?api=${encodeURIComponent(API_BASE)}`;
+    }
 
     async function api(path, options = {}) {
       const res = await fetch(`${API_BASE}${path}`, {
