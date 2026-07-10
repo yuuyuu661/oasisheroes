@@ -13,6 +13,7 @@
       --panel: #ffffff;
       --accent: #2d8c57;
       --accent-2: #e3a32d;
+      --danger: #b64a3b;
     }
     * { box-sizing: border-box; }
     body {
@@ -22,29 +23,32 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     header {
-      padding: 18px 18px 12px;
+      padding: 16px 18px 12px;
       border-bottom: 1px solid var(--line);
       background: #fff;
       position: sticky;
       top: 0;
       z-index: 2;
     }
-    .header-row {
+    .header-row, .actions, .tabs {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-    h1 { font-size: 24px; margin: 0 0 6px; }
+    .header-row { justify-content: space-between; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
     h2 { margin: 0 0 10px; font-size: 17px; }
+    h3 { margin: 0; font-size: 15px; }
     .sub, .meta, .log { color: var(--muted); }
     .sub, .meta { font-size: 13px; }
+    .log { min-height: 34px; font-size: 13px; line-height: 1.5; }
     main {
-      width: min(1120px, 100%);
+      width: min(1180px, 100%);
       margin: 0 auto;
-      padding: 16px;
+      padding: 14px;
       display: grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1.05fr .95fr;
       gap: 14px;
     }
     main.creation { display: block; }
@@ -54,11 +58,11 @@
       border-radius: 8px;
       padding: 14px;
     }
-    .grid { display: grid; gap: 8px; }
+    .grid { display: grid; gap: 10px; }
     .hero {
-      min-height: 220px;
+      min-height: 210px;
       display: grid;
-      grid-template-columns: 180px 1fr;
+      grid-template-columns: 174px 1fr;
       gap: 16px;
       align-items: center;
     }
@@ -85,22 +89,31 @@
     .stat {
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 10px;
+      padding: 9px;
       background: #fbfcf7;
     }
     .label { color: var(--muted); font-size: 12px; }
-    .value { font-weight: 700; font-size: 20px; margin-top: 3px; }
-    .item, .listing {
+    .value { font-weight: 800; font-size: 20px; margin-top: 3px; }
+    .tab {
+      background: #edf3e9;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    .tab.active { background: var(--accent-2); color: #20150a; border-color: var(--accent-2); }
+    .item, .listing, .stage-card {
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 10px;
       display: grid;
-      grid-template-columns: 1fr auto;
       gap: 8px;
-      align-items: center;
       background: #fff;
     }
+    .item, .listing {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
     .item strong, .listing strong { display: block; }
+    .item-title { display: flex; gap: 8px; align-items: center; min-width: 0; }
     .item-icon {
       width: 42px;
       height: 42px;
@@ -109,22 +122,69 @@
       border-radius: 8px;
       background: #f7faf4;
       padding: 4px;
-      margin-right: 8px;
-      vertical-align: middle;
+      flex: 0 0 auto;
     }
-    .legendary { border-color: #e3a32d; background: #fff9e8; }
-    .epic { border-color: #8e6ad8; background: #f7f2ff; }
-    .rare { border-color: #3d8fd9; background: #eff7ff; }
+    .normal { border-color: #dce4d5; }
+    .magic { border-color: #5b8fd8; background: #f1f7ff; }
+    .rare { border-color: #d6a032; background: #fff9e8; }
+    .unique { border-color: #8e6ad8; background: #f7f2ff; }
+    .mythic { border-color: #d85b5b; background: #fff0f0; }
+    .equipment-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .slot-card {
+      min-height: 130px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      display: grid;
+      align-content: start;
+      gap: 6px;
+      background: #f9fbf6;
+    }
+    .slot-frame {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1px solid #cad5c5;
+      background: #111 url("assets/ui/empty-equipment-frame.png") center / cover no-repeat;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .slot-frame img {
+      width: 78%;
+      height: 78%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.25));
+    }
+    .slot-name { font-weight: 800; font-size: 12px; }
+    .stat-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .stage-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .stage-card.current { border-color: var(--accent); background: #f1fbf4; }
+    .stage-card.locked { opacity: .56; }
     button {
       border: 0;
       background: var(--accent);
       color: #fff;
       border-radius: 8px;
       padding: 8px 10px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
     }
     button.secondary { background: #edf3e9; color: var(--ink); border: 1px solid var(--line); }
+    button.danger { background: var(--danger); }
+    button:disabled { opacity: .45; cursor: not-allowed; }
     input {
       width: 86px;
       border: 1px solid var(--line);
@@ -132,10 +192,6 @@
       padding: 8px;
       font: inherit;
     }
-    .actions { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
-    .log { min-height: 44px; font-size: 13px; line-height: 1.5; }
-    .tabs { display: flex; gap: 8px; margin-bottom: 10px; }
-    .tab.active { background: var(--accent-2); color: #20150a; }
     .class-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -152,14 +208,14 @@
     }
     .class-card .art-wrap { height: 116px; }
     .class-card .class-art { width: 132px; height: 132px; }
-    .class-card h3 { margin: 0; font-size: 16px; }
-    @media (max-width: 860px) {
+    @media (max-width: 920px) {
       main { grid-template-columns: 1fr; padding: 10px; }
       .class-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-    @media (max-width: 560px) {
+    @media (max-width: 620px) {
       .hero { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: 1fr 1fr; }
+      .stats, .stat-list, .stage-grid { grid-template-columns: 1fr 1fr; }
+      .equipment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .class-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -169,7 +225,7 @@
     <div class="header-row">
       <div>
         <h1>おあしすヒーローズ</h1>
-        <div class="sub">放置で冒険、装備を集めて、交易所で売り買いできます。</div>
+        <div class="sub">ステージを選び、放置で装備とゴールドを集めて強くなります。</div>
       </div>
       <button class="secondary" type="button" onclick="openAdminMenu()">管理者ページ</button>
     </div>
@@ -184,7 +240,40 @@
     const params = new URLSearchParams(location.search);
     const session = params.get("session");
     const API_BASE = (params.get("api") || location.origin).replace(/\/$/, "");
-    const state = { data: null };
+    const state = { data: null, tab: "stats" };
+
+    const STAT_LABELS = {
+      health: "体力",
+      mana: "マナ",
+      energy_shield: "エナジーシールド",
+      physical_damage: "物理ダメージ",
+      magic_damage: "魔法ダメージ",
+      fire_damage: "火ダメージ",
+      cold_damage: "冷気ダメージ",
+      lightning_damage: "雷ダメージ",
+      crit_rate: "クリティカル率",
+      crit_damage: "クリティカルダメージ倍率",
+      fire_resist: "火耐性",
+      cold_resist: "冷気耐性",
+      lightning_resist: "雷耐性",
+      chaos_resist: "混沌耐性",
+      physical_resist: "物理耐性",
+      health_regen: "体力自然回復",
+      mana_regen: "マナ自然回復"
+    };
+    const PERCENT_STATS = new Set(["crit_rate", "crit_damage", "fire_resist", "cold_resist", "lightning_resist", "chaos_resist", "physical_resist"]);
+    const SLOT_ORDER = [
+      ["main_hand", "メイン武器"],
+      ["off_hand", "オフハンド"],
+      ["head", "兜"],
+      ["body", "胴体"],
+      ["hands", "手袋"],
+      ["feet", "靴"],
+      ["belt", "ベルト"],
+      ["ring", "指輪"],
+      ["ring", "指輪"],
+      ["amulet", "アミュレット"]
+    ];
 
     function openAdminMenu() {
       const token = prompt("HEROES_ADMIN_TOKENを入力してください。");
@@ -210,13 +299,20 @@
       return `<div class="art-wrap"><img class="class-art" src="assets/classes/${safeKey}.svg" alt="${safeName}"></div>`;
     }
 
+    function itemImageUrl(url) {
+      if (!url) return "";
+      if (url.startsWith("/api/")) return `${API_BASE}${url}`;
+      return url;
+    }
+
     function itemClass(item) {
-      return `item ${item.rarity || ""}`;
+      return `item ${item.rarity || "normal"}`;
     }
 
     function itemLine(item) {
       const slot = state.data?.slot_labels?.[item.slot] || item.slot;
-      return `<strong>${item.rarity_label} ${item.name}</strong><div class="meta">${slot} / 強さ +${item.power}${item.equipped ? " / 装備中" : ""}</div>`;
+      const image = item.image_url ? `<img class="item-icon" src="${itemImageUrl(item.image_url)}" alt="${item.name}">` : "";
+      return `<div class="item-title">${image}<div><strong>${item.rarity_label || ""} ${item.name}</strong><div class="meta">${slot} / 強さ +${item.power}${item.equipped ? " / 装備中" : ""}</div></div></div>`;
     }
 
     async function load() {
@@ -243,7 +339,7 @@
       document.getElementById("app").innerHTML = `
         <section>
           <h2>キャラクター作成</h2>
-          <div class="log">最初の職業を選んでください。あとから装備を集めてどんどん強くなります。</div>
+          <div class="log">最初の職業を選んでください。あとから装備を集めて、どんどん強くなります。</div>
           <div class="class-grid">
             ${data.classes.map(job => `
               <div class="class-card">
@@ -286,34 +382,76 @@
             </div>
           </section>
           <section>
-            <h2>装備中</h2>
-            <div class="grid">${equippedHtml(data)}</div>
+            <div class="tabs">
+              <button class="tab ${state.tab === "stats" ? "active" : ""}" type="button" onclick="setTab('stats')">ステータス</button>
+              <button class="tab ${state.tab === "equipment" ? "active" : ""}" type="button" onclick="setTab('equipment')">装備</button>
+              <button class="secondary" type="button" onclick="load()">更新</button>
+            </div>
+            ${state.tab === "stats" ? statsHtml(data) : equipmentHtml(data)}
           </section>
           <section>
             <h2>インベントリー ${data.inventory_count ?? data.inventory.length}/${data.inventory_limit ?? 40}</h2>
             <div class="grid">${inventoryHtml(data)}</div>
           </section>
         </div>
-        <section>
-          <div class="tabs">
-            <button class="tab active" type="button">交易所</button>
-            <button class="secondary" type="button" onclick="load()">更新</button>
-          </div>
-          <div class="grid">${listingsHtml(data)}</div>
-        </section>`;
+        <div class="grid">
+          <section>
+            <h2>放置ステージ</h2>
+            <div class="stage-grid">${stagesHtml(data)}</div>
+          </section>
+          <section>
+            <h2>交易所</h2>
+            <div class="grid">${listingsHtml(data)}</div>
+          </section>
+        </div>`;
+    }
+
+    function setTab(tab) {
+      state.tab = tab;
+      render();
     }
 
     function logText(data) {
+      if (data.boss_result) {
+        const result = data.boss_result;
+        return result.victory
+          ? `${result.boss_name}を倒しました。ステージ${result.stage}が開放されました。`
+          : `${result.boss_name}に敗北しました。戦力 ${result.hero_roll} / ボス ${result.boss_roll}`;
+      }
       const drops = data.drops || [];
       return drops.length
-        ? `${drops.length}個の装備を拾いました。`
-        : "冒険中です。しばらく放置すると経験値・ゴールド・装備が入ります。";
+        ? `${drops.length}個の装備を獲得しました。`
+        : "放置中です。ステージに応じて経験値、ゴールド、装備が入ります。";
     }
 
-    function equippedHtml(data) {
-      return data.equipped.length
-        ? data.equipped.map(item => `<div class="${itemClass(item)}"><div>${itemLine(item)}</div></div>`).join("")
-        : `<div class="meta">まだ装備していません。</div>`;
+    function formatStat(key, value) {
+      const suffix = PERCENT_STATS.has(key) ? "%" : "";
+      return `${value}${suffix}`;
+    }
+
+    function statsHtml(data) {
+      const stats = data.stats || {};
+      return `<div class="stat-list">${Object.entries(STAT_LABELS).map(([key, label]) => `
+        <div class="stat"><div class="label">${label}</div><div class="value">${formatStat(key, stats[key] ?? 0)}</div></div>
+      `).join("")}</div>`;
+    }
+
+    function equipmentHtml(data) {
+      const bySlot = {};
+      for (const item of data.equipped || []) {
+        if (!bySlot[item.slot]) bySlot[item.slot] = [];
+        bySlot[item.slot].push(item);
+      }
+      const ringItems = bySlot.ring || [];
+      let ringIndex = 0;
+      return `<div class="equipment-grid">${SLOT_ORDER.map(([slot, label]) => {
+        const item = slot === "ring" ? ringItems[ringIndex++] : (bySlot[slot] || [])[0];
+        return `<div class="slot-card">
+          <div class="slot-name">${label}</div>
+          <div class="slot-frame">${item?.image_url ? `<img src="${itemImageUrl(item.image_url)}" alt="${item.name}">` : ""}</div>
+          <div class="meta">${item ? `${item.rarity_label || ""} ${item.name}` : "空き"}</div>
+        </div>`;
+      }).join("")}</div>`;
     }
 
     function inventoryHtml(data) {
@@ -327,16 +465,34 @@
       }).join("");
     }
 
+    function stagesHtml(data) {
+      return (data.stages || []).map(stage => {
+        const locked = !stage.unlocked;
+        const bossAvailable = stage.boss_unlocked;
+        return `<div class="stage-card ${stage.current ? "current" : ""} ${locked && !bossAvailable ? "locked" : ""}">
+          <h3>${stage.name}</h3>
+          <div class="meta">モンスターレベル ${stage.monster_level}</div>
+          <div class="meta">経験値 ${stage.exp_per_hour}/H / ゴールド ${stage.gold_per_hour}/H</div>
+          <div class="actions">
+            <button type="button" onclick="selectStage(${stage.stage})" ${locked ? "disabled" : ""}>放置する</button>
+            ${bossAvailable ? `<button class="secondary" type="button" onclick="challengeBoss(${stage.stage})">ボス挑戦</button>` : ""}
+          </div>
+          ${bossAvailable ? `<div class="meta">${stage.boss_name} / 必要目安 ${stage.boss_power}</div>` : ""}
+        </div>`;
+      }).join("");
+    }
+
     function listingsHtml(data) {
       if (!data.listings.length) return `<div class="meta">出品はまだありません。</div>`;
+      const full = (data.inventory_count ?? data.inventory.length) >= (data.inventory_limit ?? 40);
       return data.listings.map(item => `
         <div class="listing ${item.rarity}">
           <div>
-            <strong>${item.rarity_label} ${item.name}</strong>
-            <div class="meta">強さ +${item.power} / 出品者 ${item.seller_name || "不明"}</div>
+            ${itemLine(item)}
+            <div class="meta">出品者 ${item.seller_name || "不明"}</div>
           </div>
-          <div class="actions"><strong>${item.price}G</strong><button onclick="buy(${item.listing_id})">購入</button></div>
-        </div>`).join("");
+          <div class="actions"><strong>${item.price}G</strong><button onclick="buy(${item.listing_id})" ${full ? "disabled" : ""}>購入</button></div>
+        </div>`).join("") + (full ? `<div class="meta">インベントリーが満タンのため購入できません。</div>` : "");
     }
 
     async function equip(itemId) {
@@ -360,6 +516,22 @@
       state.data = await api("/api/heroes/trade/buy", {
         method: "POST",
         body: JSON.stringify({ session, listing_id: listingId })
+      });
+      render();
+    }
+
+    async function selectStage(stage) {
+      state.data = await api("/api/heroes/stage/select", {
+        method: "POST",
+        body: JSON.stringify({ session, stage })
+      });
+      render();
+    }
+
+    async function challengeBoss(stage) {
+      state.data = await api("/api/heroes/boss/challenge", {
+        method: "POST",
+        body: JSON.stringify({ session, stage })
       });
       render();
     }
